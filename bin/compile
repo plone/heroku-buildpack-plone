@@ -23,29 +23,49 @@ CACHE_DIR=$2
 VERSION="60"
 BUILDOUT_BUILD="$(mktmpdir buildout)"
 INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"
-#PROFILE_PATH="$BUILD_DIR/.profile.d/unzip.sh"
+PROFILE_PATH="$BUILD_DIR/.profile.d/buildout.sh"
 
 mkdir -p $INSTALL_DIR
-#mkdir -p $(dirname $PROFILE_PATH)
+mkdir -p $(dirname $PROFILE_PATH)
 mkdir -p $CACHE_DIR
 
-if [ ! -f $CACHE_DIR/buildout ]; then
-    echo "Bootstrapping" | indent
-    cd $BUILDOUT_BUILD
-    curl -OL "http://downloads.buildout.org/1/bootstrap.py"
-    python bootstrap.py
+mkdir -p $INSTALL_DIR/bin
+mkdir -p $INSTALL_DIR/eggs
+mkdir -p $INSTALL_DIR/parts
+
+if [ ! $CACHE_DIR/buildout ]; then
+    echo "Cache empty, initializing" | indent
+    mkdir -p $CACHE_DIR/buildout/bin
+    mkdir -p $CACHE_DIR/buildout/eggs
+    mkdir -p $CACHE_DIR/buildout/parts
+    mkdir -p $CACHE_DIR/buildout/var
 else
     echo "Copying buildout from cache" | indent
-    cp $CACHE_DIR/buildout  $BUILDOUT_BUILD
+    mv $CACHE_DIR/buildout/bin  $BUILDOUT_BUILD/
+    mv $CACHE_DIR/buildout/eggs  $BUILDOUT_BUILD/
+    mv $CACHE_DIR/buildout/parts  $BUILDOUT_BUILD/
+    mv $CACHE_DIR/buildout/var  $BUILDOUT_BUILD/
 fi
 
-bin/buildout
-cp "$BUILDOUT_BUILD/bin" $CACHE_DIR/buildout/bin
-cp "$BUILDOUT_BUILD/bin" $INSTALL_DIR/buildout/bin
-cp "$BUILDOUT_BUILD/eggs" $CACHE_DIR/buildout/eggs
-cp "$BUILDOUT_BUILD/eggs" $INSTALL_DIR/buildout/eggs
-cp "$BUILDOUT_BUILD/parts" $CACHE_DIR/buildout/parts
-cp "$BUILDOUT_BUILD/parts" $INSTALL_DIR/buildout/parts
+cp $BUILD_DIR/bootstrap.py $BUILDOUT_BUILD/
+cp $BUILD_DIR/buildout.cfg $BUILDOUT_BUILD/
+cd $BUILDOUT_BUILD
+
+python bootstrap.py
+bin/buildout -v
+
+sed "s|${BUILDOUT_BUILD}|/app/.heroku/vendor/buildout/|" parts/instance/etc/zope.conf > zope.conf.new
+mv zope.conf.new parts/instance/etc/zope.conf
+
+
+cp -r $BUILDOUT_BUILD/bin $CACHE_DIR/buildout
+cp -r $BUILDOUT_BUILD/bin $INSTALL_DIR
+cp -r $BUILDOUT_BUILD/eggs $CACHE_DIR/buildout
+cp -r $BUILDOUT_BUILD/eggs $INSTALL_DIR
+cp -r $BUILDOUT_BUILD/parts $CACHE_DIR/buildout
+cp -r $BUILDOUT_BUILD/parts $INSTALL_DIR
+cp -r $BUILDOUT_BUILD/var $CACHE_DIR/buildout
+cp -r $BUILDOUT_BUILD/var $INSTALL_DIR
 
 set-env PATH '/app/.heroku/vendor/buildout/bin:$PATH'
 
