@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+# Usage: $ set-env key value
+set-env() {
+  echo "export $1=$2" >> $PROFILE_PATH
+}
+
+mktmpdir() {
+  dir=$(mktemp -t fakesu-$1-XXXX)
+  rm -rf $dir
+  mkdir -p $dir
+  echo $dir
+}
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+VERSION="60"
+BUILDOUT_BUILD="$(mktmpdir buildout)"
+INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"
+#PROFILE_PATH="$BUILD_DIR/.profile.d/unzip.sh"
+
+mkdir -p $INSTALL_DIR
+#mkdir -p $(dirname $PROFILE_PATH)
+mkdir -p $CACHE_DIR
+
+if [ ! -f $CACHE_DIR/buildout ]; then
+    echo "Bootstrapping" | indent
+    cd $BUILDOUT_BUILD
+    curl -OL "http://downloads.buildout.org/1/bootstrap.py"
+    python bootstrap.py
+else
+    echo "Copying buildout from cache" | indent
+    cp $CACHE_DIR/buildout  $BUILDOUT_BUILD
+fi
+
+bin/buildout
+cp "$BUILDOUT_BUILD/bin" $CACHE_DIR/buildout/bin
+cp "$BUILDOUT_BUILD/bin" $INSTALL_DIR/buildout/bin
+cp "$BUILDOUT_BUILD/eggs" $CACHE_DIR/buildout/eggs
+cp "$BUILDOUT_BUILD/eggs" $INSTALL_DIR/buildout/eggs
+cp "$BUILDOUT_BUILD/parts" $CACHE_DIR/buildout/parts
+cp "$BUILDOUT_BUILD/parts" $INSTALL_DIR/buildout/parts
+
+set-env PATH '/app/.heroku/vendor/buildout/bin:$PATH'
+
+echo "Done" | indent
