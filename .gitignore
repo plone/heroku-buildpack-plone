@@ -1,7 +1,5 @@
 *.pyc
 .installed.cfg
-Changelog.md
-Readme.md
 bin/activate
 bin/activate.csh
 bin/activate.fish
@@ -18,3 +16,4 @@ bin/python2.7
 include/
 lib/
 parts/
+var/

@@ -2,71 +2,61 @@
 
 set -eo pipefail
 
+# Heroku has opinions on indentation, let's respect them
 indent() {
   sed -u 's/^/       /'
 }
 
-# Usage: $ set-env key value
-set-env() {
-  echo "export $1=$2" >> $PROFILE_PATH
-}
+CACHE_DIR=$2  # -> use this dir for caching between compiles
+BUILD_DIR=$1  # -> temp dir that contains whatever is in the git repo
+INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
+# finished, copy results to this dir so they get compressed into a Heroku slug
 
-mktmpdir() {
-  dir=$(mktemp -t fakesu-$1-XXXX)
-  rm -rf $dir
-  mkdir -p $dir
-  echo $dir
-}
-
-BUILD_DIR=$1
-CACHE_DIR=$2
-VERSION="60"
-BUILDOUT_BUILD="$(mktmpdir buildout)"
-INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"
-PROFILE_PATH="$BUILD_DIR/.profile.d/buildout.sh"
-
-mkdir -p $INSTALL_DIR
-mkdir -p $(dirname $PROFILE_PATH)
+# make sure dirs exist
 mkdir -p $CACHE_DIR
+mkdir -p $INSTALL_DIR
 
-mkdir -p $INSTALL_DIR/bin
-mkdir -p $INSTALL_DIR/eggs
-mkdir -p $INSTALL_DIR/parts
-
-if [ ! $CACHE_DIR/buildout ]; then
-    echo "Cache empty, initializing" | indent
-    mkdir -p $CACHE_DIR/buildout/bin
-    mkdir -p $CACHE_DIR/buildout/eggs
-    mkdir -p $CACHE_DIR/buildout/parts
-    mkdir -p $CACHE_DIR/buildout/var
+echo "-----> Use build cache"
+if [ -d $CACHE_DIR/bin ]; then
+    echo "Get buildout results from the previous build" | indent
+    cp -r $CACHE_DIR/bin  $BUILD_DIR/
+    cp -r $CACHE_DIR/eggs  $BUILD_DIR/
+    cp -r $CACHE_DIR/parts  $BUILD_DIR/
+    cp -r $CACHE_DIR/var  $BUILD_DIR/
 else
-    echo "Copying buildout from cache" | indent
-    mv $CACHE_DIR/buildout/bin  $BUILDOUT_BUILD/
-    mv $CACHE_DIR/buildout/eggs  $BUILDOUT_BUILD/
-    mv $CACHE_DIR/buildout/parts  $BUILDOUT_BUILD/
-    mv $CACHE_DIR/buildout/var  $BUILDOUT_BUILD/
+    echo "Cache empty, start from scratch" | indent
 fi
 
-cp $BUILD_DIR/bootstrap.py $BUILDOUT_BUILD/
-cp $BUILD_DIR/buildout.cfg $BUILDOUT_BUILD/
-cd $BUILDOUT_BUILD
-
+cd $BUILD_DIR
+echo "-----> Bootstrap buildout"
+curl -OL "http://downloads.buildout.org/1/bootstrap.py"
 python bootstrap.py
+echo "-----> Run bin/buildout"
 bin/buildout -v
 
-sed "s|${BUILDOUT_BUILD}|/app/.heroku/vendor/buildout|" parts/instance/etc/zope.conf > zope.conf.new
+echo "-----> Fix paths in zope.conf"
+sed "s|${BUILD_DIR}|/app/.heroku/vendor/buildout|" parts/instance/etc/zope.conf > zope.conf.new
 mv zope.conf.new parts/instance/etc/zope.conf
 
+echo "-----> Copy results to cache"
+cp -r $BUILD_DIR/bin $CACHE_DIR
+cp -r $BUILD_DIR/eggs $CACHE_DIR
+cp -r $BUILD_DIR/parts $CACHE_DIR
+cp -r $BUILD_DIR/var $CACHE_DIR
 
-cp -r $BUILDOUT_BUILD/bin $CACHE_DIR/buildout
-cp -r $BUILDOUT_BUILD/bin $INSTALL_DIR
-cp -r $BUILDOUT_BUILD/eggs $CACHE_DIR/buildout
-cp -r $BUILDOUT_BUILD/eggs $INSTALL_DIR
-cp -r $BUILDOUT_BUILD/parts $CACHE_DIR/buildout
-cp -r $BUILDOUT_BUILD/parts $INSTALL_DIR
-cp -r $BUILDOUT_BUILD/var $CACHE_DIR/buildout
-cp -r $BUILDOUT_BUILD/var $INSTALL_DIR
+echo "-----> Copy results to slug"
+cp -r $BUILD_DIR/bin $INSTALL_DIR
+cp -r $BUILD_DIR/eggs $INSTALL_DIR
+cp -r $BUILD_DIR/parts $INSTALL_DIR
+cp -r $BUILD_DIR/var $INSTALL_DIR
 
-set-env PATH '/app/.heroku/vendor/buildout/bin:$PATH'
+echo "-----> Copy configure_zopeconf.py script to slug"
+curl -OL "https://raw.githubusercontent.com/niteoweb/heroku-buildpack-plone/master/configure_zopeconf.py"
+cp -r $BUILD_DIR/configure_zopeconf.py $INSTALL_DIR
+
+# Add buildout bin/ to PATH
+PROFILE_PATH="$BUILD_DIR/.profile.d/buildout.sh"
+mkdir -p $(dirname $PROFILE_PATH)
+echo "export PATH='/app/.heroku/vendor/buildout/bin:$PATH'" >> $PROFILE_PATH
 
 echo "Done" | indent

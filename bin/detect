@@ -4,4 +4,4 @@
 BUILD_DIR=$1
 [ -f $BUILD_DIR/buildout.cfg ] || exit 1 # fail fast if no buildout.cfg
 
-echo Buildout
+echo Plone
