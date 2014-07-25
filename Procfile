@@ -1,1 +1,1 @@
-web: sed "s/address 8080/address $PORT/" /app/.heroku/vendor/buildout/parts/instance/etc/zope.conf > zope.conf.new; mv zope.conf.new /app/.heroku/vendor/buildout/parts/instance/etc/zope.conf; instance fg
+web: python configure_zopeconf.py; instance fg

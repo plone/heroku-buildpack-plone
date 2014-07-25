@@ -54,7 +54,7 @@ cd $BUILDOUT_BUILD
 python bootstrap.py
 bin/buildout -v
 
-sed "s|${BUILDOUT_BUILD}|/app/.heroku/vendor/buildout/|" parts/instance/etc/zope.conf > zope.conf.new
+sed "s|${BUILDOUT_BUILD}|/app/.heroku/vendor/buildout|" parts/instance/etc/zope.conf > zope.conf.new
 mv zope.conf.new parts/instance/etc/zope.conf
 
 
