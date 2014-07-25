@@ -1,6 +1,3 @@
-heroku config:add BUILDPACK_URL=http://github.com/kr/heroku-buildpack-inline.git
-
-
 Heroku buildpack: Plone
 =======================
 
@@ -9,16 +6,18 @@ This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) fo
 Plone on Heroku
 ---------------
 
-To make Plone run on Heroku you need to add the configuration to your
-``buildout.cfg`` file::
+To make Plone run on Heroku you need to add the following configuration to your
+``buildout.cfg`` file:
 
     [buildout]
+    ...
     relative-paths = true
 
     [instance]
-    recipe = plone.recipe.zope2instance
+    ...
     relative-paths = true
     eggs +=
+        ...
         RelStorage
         psycopg2
     rel-storage =
@@ -49,16 +48,21 @@ are set by the ``configure_zopeconf.py`` script, which reads them from environme
 
 5. On free-tier Heroku gives you one dyno instance per month. Forever. However, if there are no requests to your site withing an hour, Heroku will put the dyno to sleep. When the next request comes there will be some delay before a response is sent back (~20s for heroku startup, ~20s for Plone startup), but subsequent requests will be served at a normal speed.
 
-6. The free-tier PostgreSQL DB that you get with this buildpack has a limit of 10.000 rows. To keep clear of this limit the ``buildout.cfg`` above sets the ``keep-history false`` flag to not keep transactional history. This means that you loose the `Undo` feature, but you do keep the document history, your DB remains small and manageable and you do not need to regularly "pack" your DB.
+6. The free-tier PostgreSQL DB that you get with this buildpack has a limit of 10.000 rows. To keep clear of this limit the ``buildout.cfg`` above sets the ``keep-history false`` flag to not keep transactional history. This means that you loose the `Undo` feature, but you do keep the document history, your DB remains small and manageable and there is no need to regularly "pack" your DB. The 10k limit is (based on quick tests) reached after about 200 content items. After that you need to move to the first paid PostgreSQL plan ($9/month) which bumps the limit to 10 million rows. To check how many rows you
+are using, run ``heroku pg:info``.
 
 
 Usage
 -----
 
-Example usage:
+Example usage, assuming you have already [signed up for a Heroku account](https://id.heroku.com/signup) and have successfully installed the [Heroku Toolbelt](https://toolbelt.heroku.com/):
 
     $ ls
     buildout.cfg
+
+    $ git init
+    $ git add buildout.cfg
+    $ git commit -m "initial commit"
 
     $ heroku create --buildpack git://github.com/niteoweb/heroku-buildpack-plone.git
 
@@ -80,6 +84,17 @@ Example usage:
            Default types for Plone -> web
 
     $ heroku open
+    $ heroku logs -t
 
 The buildpack will detect your app as Plone if it has the file `buildout.cfg` in the root. It will use `zc.buildout` to install your dependencies, vendoring a copy of the Plone runtime into your slug. It will define a default ``Procfile`` (so you don't have to manually create it) and provision a free-tier PostgreSQL database for persistence.
 
+At this point you should probably read more about [how Heroku works](https://devcenter.heroku.com/articles/how-heroku-works).
+
+
+TODO
+----
+
+* tests
+* automatic deployment of a test app (via travis)
+* allow setting buildout verbosity with environment variables
+* bonus karma points: cloudflare, virtual hosting, add-ons (sentry, papertrail, IRC, MailGun, backups)
