@@ -33,6 +33,7 @@ if [ -f $ENV_DIR/BUILDOUT_CFG ]; then
     export "BUILDOUT_CFG=$(cat $ENV_DIR/BUILDOUT_CFG)"
     echo "Found ${BUILDOUT_CFG}" | indent
 else
+    export "BUILDOUT_CFG=buildout.cfg"
     echo "Using default: buildout.cfg" | indent
 fi
 
@@ -41,6 +42,7 @@ if [ -f $ENV_DIR/BUILDOUT_VERBOSITY ]; then
     export "BUILDOUT_VERBOSITY=$(cat $ENV_DIR/BUILDOUT_VERBOSITY)"
     echo "Use verbosity: ${BUILDOUT_VERBOSITY}" | indent
 else
+    export "BUILDOUT_VERBOSITY="
     echo "Use default buildout verbosity" | indent
 fi
 

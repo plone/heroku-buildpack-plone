@@ -1,0 +1,23 @@
+env:
+  global:
+  - secure: |-
+      KAxwff0x+WjEVDmw47QPcObsIZrshEU0Wbr4lBZjQp6AVb24JSUcvnsgdm8ymTznib
+      5Psn338DbDhV5WBha4zmYbP9BhjuP6g6l8dKfia7HYc2H9kjeR6Z7KnzVqpTB7qkg2
+      ilnZ26poVxFuEKsKU2qz4yTVvT+O55dEtY7YaNE=  # HEROKU_API_KEY for travis@niteoweb.com
+
+before_script:
+  - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+  - git remote add heroku git@heroku.com:heroku-buildpack-plone.git
+  - echo "Host heroku.com" >> ~/.ssh/config
+  - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
+  - echo "   CheckHostIP no" >> ~/.ssh/config
+  - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+  - heroku keys:clear
+  - yes | heroku keys:add
+  - heroku plugins:install https://github.com/heroku/heroku-repo.git
+  - heroku plugins:install https://github.com/glenngillen/heroku-exit-status.git
+  - heroku repo:purge_cache
+
+script:
+  - yes | git push heroku master
+  - heroku run "python configure_zopeconf.py; bin/instance run test.py"
