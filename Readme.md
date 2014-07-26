@@ -1,7 +1,7 @@
 Heroku buildpack: Plone
 =======================
 
-This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) for Plone apps, powered by [zc.buildout](http://www.buildout.org/en/latest/). You can use the free-tier Heroku account to run a simple, production-quality, Plone site, absolutely for free, forever.
+This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) for Plone apps, powered by [zc.buildout](http://www.buildout.org/en/latest/). You can use the free-tier [Heroku](https://www.heroku.com/features) account to run a simple, production-quality, Plone site, absolutely for free, forever.
 
 [![Build Status](https://travis-ci.org/niteoweb/heroku-buildpack-plone.svg?branch=master)](https://travis-ci.org/niteoweb/heroku-buildpack-plone)
 
