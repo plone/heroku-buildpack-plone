@@ -7,8 +7,9 @@ indent() {
   sed -u 's/^/       /'
 }
 
-CACHE_DIR=$2  # -> use this dir for caching between compiles
 BUILD_DIR=$1  # -> temp dir that contains whatever is in the git repo
+CACHE_DIR=$2  # -> use this dir for caching between compiles
+ENV_DIR=$3  # -> environment variables are stored as files inside here
 INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
 # finished, copy results to this dir so they get compressed into a Heroku slug
 
@@ -27,12 +28,20 @@ else
     echo "Cache empty, start from scratch" | indent
 fi
 
+echo "-----> Read BUILDOUT_CFG from env vars, or use default"
+if [ -f $ENV_DIR/BUILDOUT_CFG ]; then
+    export "BUILDOUT_CFG=$(cat $ENV_DIR/BUILDOUT_CFG)"
+    echo "Found ${BUILDOUT_CFG}" | indent
+else
+    echo "Using default: buildout.cfg" | indent
+fi
+
 cd $BUILD_DIR
 echo "-----> Bootstrap buildout"
 curl -OL "http://downloads.buildout.org/1/bootstrap.py"
 python bootstrap.py
-echo "-----> Run bin/buildout"
-bin/buildout -v
+echo "-----> Run bin/buildout -c ${BUILDOUT_CFG}"
+bin/buildout -c $BUILDOUT_CFG
 
 echo "-----> Fix paths in zope.conf"
 sed "s|${BUILD_DIR}|/app|" parts/instance/etc/zope.conf > zope.conf.new

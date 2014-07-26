@@ -90,6 +90,15 @@ The buildpack will detect your app as Plone if it has the file `buildout.cfg` in
 
 At this point you should probably read more about [how Heroku works](https://devcenter.heroku.com/articles/how-heroku-works).
 
+Options
+-------
+
+### Running arbitrary *.cfg file
+
+To run an arbitrary *.cfg file, (like ``heroku.cfg`` for example) set the
+following environment variable:
+
+    $ heroku config:add BUILDOUT_CFG=heroku.cfg
 
 TODO
 ----
