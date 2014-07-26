@@ -90,6 +90,7 @@ The buildpack will detect your app as Plone if it has the file `buildout.cfg` in
 
 At this point you should probably read more about [how Heroku works](https://devcenter.heroku.com/articles/how-heroku-works).
 
+
 Options
 -------
 
@@ -106,6 +107,33 @@ To increase the verbosity of ``bin/buildout`` set the following environment vari
     $ heroku config:add BUILDOUT_VERBOSITY=-v
 
 You can increase verbosity up to ``-vvvv``.
+
+
+Migrating an existing Plone site to Heroku
+------------------------------------------
+
+When moving to Heroku the main task is to migrate from ZODB filesystem type database to PostgreSQL relational database. Every migration will differ but this are the general steps that you should take:
+
+#. download Data.fs & BLOBs to local machine
+#. modify local buildout.cfg with heroku specific configuration
+#. git push to heroku to confirm you site runs on Heroku and that a PostgreSQL database is created
+#. $ heroku config -> write down the DB connection string
+#. follow instructions on https://pypi.python.org/pypi/RelStorage#id18, an example ``zodbconvert.conf`` follows:
+
+    <filestorage source>
+      path var/filestorage/Data.fs
+      blob-dir var/blobstorage
+    </filestorage>
+
+    <relstorage destination>
+      shared-blob-dir false
+      blob-dir ./var/blobcache
+      blob-cache-size 10mb
+      keep-history false
+        <postgresql>
+          dsn dbname='<DATABASE>' user='<USER>' host='<HOST>' password='PASSWOR'
+        </postgresql>
+    </relstorage>
 
 
 :sparkles: Bonus Karma Points :sparkles:
