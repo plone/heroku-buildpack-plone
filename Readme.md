@@ -114,11 +114,11 @@ Migrating an existing Plone site to Heroku
 
 When moving to Heroku the main task is to migrate from ZODB filesystem type database to PostgreSQL relational database. Every migration will differ but this are the general steps that you should take:
 
-#. download Data.fs & BLOBs to local machine
-#. modify local buildout.cfg with heroku specific configuration
-#. git push to heroku to confirm you site runs on Heroku and that a PostgreSQL database is created
-#. $ heroku config -> write down the DB connection string
-#. follow instructions on https://pypi.python.org/pypi/RelStorage#id18, an example ``zodbconvert.conf`` follows:
+1. download Data.fs & BLOBs to local machine
+2. modify local buildout.cfg with heroku specific configuration
+3. git push to heroku to confirm you site runs on Heroku and that a PostgreSQL database is created
+4. $ heroku config -> write down the DB connection string
+5. follow instructions on https://pypi.python.org/pypi/RelStorage#id18, an example ``zodbconvert.conf`` follows:
 
     <filestorage source>
       path var/filestorage/Data.fs
