@@ -93,7 +93,7 @@ At this point you should probably read more about [how Heroku works](https://dev
 Options
 -------
 
-### Running arbitrary *.cfg file
+### Running an arbitrary *.cfg file
 
 To run an arbitrary *.cfg file, (like ``heroku.cfg`` for example) set the following environment variable:
 
@@ -108,10 +108,66 @@ To increase the verbosity of ``bin/buildout`` set the following environment vari
 You can increase verbosity up to ``-vvvv``.
 
 
+:sparkles: Bonus Karma Points :sparkles:
+-----------------------------------------
+
+Below is a few more tips n' tricks on how to get the most out of the Heroku environment.
+
+### DNS & Cloudflare
+
+By default, your app will be available on ``<APP_NAME>.herokuapp.com`` but you can use a custom domain even on the free tier.
+
+    $ heroku domains:add www.mydomain.com
+
+Then create a `CNAME` record that points to ``<APP_NAME>.herokuapp.com``. More info on https://devcenter.heroku.com/articles/custom-domains.
+
+It's recommended to use [Cloudflare](http://cloudflare.com/) as a DNS provider. Their free-tier plan acts as a simple [CDN](https://en.wikipedia.org/wiki/Content_delivery_network), while their [AlwaysOnline](https://support.cloudflare.com/hc/en-us/articles/200168006-What-does-Always-Online-do-) feature helps when your free dyno [goes to sleep](https://devcenter.heroku.com/articles/dynos#dyno-sleeping).
+
+### Virtual Hosting
+
+By default, your Plone site will be available at ``<DOMAIN>/Plone``. But normally, you would want to have your Plone site served at root (``/``). No worries, Zope's Virtual Hosting Monster to the rescue!
+
+Go to ``<DOMAIN>/Plone/virtual_hosting/manage_edit`` and add the following entry: ``<DOMAIN>/Plone``. Click ``Save Changes`` and reload.
+
+### Sending emails
+
+The Heroku dyno does not have ``sendmail`` installed. Even if it did, it is not recommended to send out emails from an unknown server/ip if you want them to be delivered. Instead use the [Mailgun add-on](https://addons.heroku.com/mailgun) that gives you a free SMTP server for outgoing email, along with tracking delivery/open rates.
+
+    $ heroku addons:add mailgun
+
+Now go to MailGun control-panel and add & configure a domain for your app.
+Optionally, you can enable tracking of email delivery & clicks.
+
+After your domain is ready, go to ``/@@mail-controlpanel`` on your Plone site and enter hostname/credentials from Mailgun.
+
+
+### Log archival
+
+Heroku stores [1500 most recent logs entries](https://devcenter.heroku.com/articles/logging#log-history-limits) which you can browse through with the ``heroko logs`` command. To keep a longer history of logs use a free-tier level of the [Papertrail add-on](https://addons.heroku.com/papertrail): this will give you 7 days of searchable log history plus the ability to store unlimited daily archives to your personal Amazon S3 account.
+
+    $ heroku addons:add papertrail
+
+### Database backups
+
+To allow its users a good night's sleep, Heroku offers [daily backups](https://devcenter.heroku.com/articles/pgbackups). Let's enable them.
+
+    $ heroku addons:add pgbackups:auto-month
+
+For extra-paranoid, you can also do [offsite backups to an S3 account](https://github.com/kbaum/pgbackups-archive-app).
+
+
+### More Heroku add-ons
+
+Browse through all [available add-ons](https://addons.heroku.com/) and see if any of them catches your attention.
+
+
+Found this repo helpful? Consider "flattring" me!
+
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=zupo&url=https://github.com/niteoweb/heroku-buildpack-plone&title=heroku-buildpack-plone&language=&tags=github&category=software)
+
+
 TODO
 ----
 
 * tests
 * automatic deployment of a test app (via travis)
-* allow setting buildout verbosity with environment variables
-* bonus karma points: cloudflare, virtual hosting, add-ons (sentry, papertrail, IRC, MailGun, backups)
