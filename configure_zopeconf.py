@@ -3,7 +3,7 @@
 go through the zope.conf and searc/replace values. Bad Plone!"""
 import os
 
-DIR = '/app/.heroku/vendor/buildout/'
+DIR = '/app/'
 zope_conf_orig = DIR + 'parts/instance/etc/zope.conf'
 zope_conf_new = DIR + 'parts/instance/etc/zope.conf.new'
 

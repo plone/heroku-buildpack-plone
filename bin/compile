@@ -35,7 +35,7 @@ echo "-----> Run bin/buildout"
 bin/buildout -v
 
 echo "-----> Fix paths in zope.conf"
-sed "s|${BUILD_DIR}|/app/.heroku/vendor/buildout|" parts/instance/etc/zope.conf > zope.conf.new
+sed "s|${BUILD_DIR}|/app|" parts/instance/etc/zope.conf > zope.conf.new
 mv zope.conf.new parts/instance/etc/zope.conf
 
 echo "-----> Copy results to cache"
@@ -53,10 +53,5 @@ cp -r $BUILD_DIR/var $INSTALL_DIR
 echo "-----> Copy configure_zopeconf.py script to slug"
 curl -OL "https://raw.githubusercontent.com/niteoweb/heroku-buildpack-plone/master/configure_zopeconf.py"
 cp -r $BUILD_DIR/configure_zopeconf.py $INSTALL_DIR
-
-# Add buildout bin/ to PATH
-PROFILE_PATH="$BUILD_DIR/.profile.d/buildout.sh"
-mkdir -p $(dirname $PROFILE_PATH)
-echo "export PATH='/app/.heroku/vendor/buildout/bin:$PATH'" >> $PROFILE_PATH
 
 echo "Done" | indent
