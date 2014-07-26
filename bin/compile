@@ -36,12 +36,20 @@ else
     echo "Using default: buildout.cfg" | indent
 fi
 
+echo "-----> Read BUILDOUT_VERBOSITY from env vars, or use default"
+if [ -f $ENV_DIR/BUILDOUT_VERBOSITY ]; then
+    export "BUILDOUT_VERBOSITY=$(cat $ENV_DIR/BUILDOUT_VERBOSITY)"
+    echo "Use verbosity: ${BUILDOUT_VERBOSITY}" | indent
+else
+    echo "Use default buildout verbosity" | indent
+fi
+
 cd $BUILD_DIR
 echo "-----> Bootstrap buildout"
 curl -OL "http://downloads.buildout.org/1/bootstrap.py"
 python bootstrap.py
-echo "-----> Run bin/buildout -c ${BUILDOUT_CFG}"
-bin/buildout -c $BUILDOUT_CFG
+echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
+bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
 
 echo "-----> Fix paths in zope.conf"
 sed "s|${BUILD_DIR}|/app|" parts/instance/etc/zope.conf > zope.conf.new

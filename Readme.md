@@ -95,10 +95,18 @@ Options
 
 ### Running arbitrary *.cfg file
 
-To run an arbitrary *.cfg file, (like ``heroku.cfg`` for example) set the
-following environment variable:
+To run an arbitrary *.cfg file, (like ``heroku.cfg`` for example) set the following environment variable:
 
     $ heroku config:add BUILDOUT_CFG=heroku.cfg
+
+### Increase buildout verbosity
+
+To increase the verbosity of ``bin/buildout`` set the following environment variable:
+
+    $ heroku config:add BUILDOUT_VERBOSITY=-v
+
+You can increase verbosity up to ``-vvvv``.
+
 
 TODO
 ----
