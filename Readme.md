@@ -189,10 +189,3 @@ As an exercise, the extra-paranoid among us can also configure [offsite DB backu
 ### More Heroku add-ons
 
 Browse through all [available add-ons](https://addons.heroku.com/) and see if any of them catches your attention.
-
-
-TODO
-----
-
-* tests
-* automatic deployment of a test app (via travis)
