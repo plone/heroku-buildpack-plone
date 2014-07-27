@@ -105,6 +105,12 @@ To increase the verbosity of ``bin/buildout``, set the following environment var
 
 You can increase verbosity up to ``-vvvv``.
 
+### Use arbitrary bootstrap.py
+
+If you want to use an arbitrary ``bootstrap.py`` file, for example to enable support for ``zc.buildout`` 2.x, set the following environment variable:
+
+    $ heroku config:add BOOTSTRAP_PY_URL=http://downloads.buildout.org/2/bootstrap.py
+
 
 Migrating an existing Plone site to Heroku
 ------------------------------------------

@@ -46,9 +46,18 @@ else
     echo "Use default buildout verbosity" | indent
 fi
 
+echo "-----> Read BOOTSTRAP_PY_URL from env vars, or use default"
+if [ -f $ENV_DIR/BOOTSTRAP_PY_URL ]; then
+    export "BOOTSTRAP_PY_URL=$(cat $ENV_DIR/BOOTSTRAP_PY_URL)"
+    echo "Use custom bootstrap.py: ${BOOTSTRAP_PY_URL}" | indent
+else
+    export "BOOTSTRAP_PY_URL=http://downloads.buildout.org/1/bootstrap.py"
+    echo "Use default bootstrap.py: ${BOOTSTRAP_PY_URL}" | indent
+fi
+
 cd $BUILD_DIR
 echo "-----> Bootstrap buildout"
-curl -OL "http://downloads.buildout.org/1/bootstrap.py"
+curl -OL "${BOOTSTRAP_PY_URL}"
 python bootstrap.py
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
