@@ -32,7 +32,7 @@ To run Plone on Heroku, you need to add the following configuration to your
         user PG_USER
         password PG_PASS
 
-This repo includes a minimal ``buildout.cfg`` sample file.
+This repo includes a minimal [``buildout.cfg``](https://github.com/niteoweb/heroku-buildpack-plone/blob/master/buildout.cfg) sample file.
 
 To understand the configuration changes, you need to know the following things about Heroku:
 
@@ -110,6 +110,16 @@ You can increase verbosity up to ``-vvvv``.
 If you want to use an arbitrary ``bootstrap.py`` file, for example to enable support for ``zc.buildout`` 2.x, set the following environment variable:
 
     $ heroku config:add BOOTSTRAP_PY_URL=http://downloads.buildout.org/2/bootstrap.py
+
+### Creating a demo of a Plone package
+
+This buildpack allows you to easily create a demo of your Plone package for users to try the package out without the hassle of installing the package locally for themselves:
+
+1. Add ``heroku.cfg`` to your package's repo, based on the sample ``buildout.cfg`` provided in this repo.
+2. Add your package's specific configuration to the ``heroku.cfg`` file.
+3. For a demo installation we want the DB to reset every once in a while, so visitors get a fresh install of Plone + your package, without content that other visitors created. This means, we want to go back to using ``Data.fs`` filestorage DB that will get removed every time the dyno running your demo is restarted. To go back to filestorage DB, just remove the ``rel-storage`` section from your ``heroku.cfg`` file.
+4. Instruct the buildpack to use the ``heroku.cfg`` instead of ``buildout.cfg``: ``$ heroku config:add BUILDOUT_CFG=heroku.cfg``
+5. Follow instructions in the `Usage` section of this README.
 
 
 Migrating an existing Plone site to Heroku
