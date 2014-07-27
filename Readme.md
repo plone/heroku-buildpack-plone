@@ -111,7 +111,7 @@ If you want to use an arbitrary ``bootstrap.py`` file, for example to enable sup
 
     $ heroku config:add BOOTSTRAP_PY_URL=http://downloads.buildout.org/2/bootstrap.py
 
-### Creating a demo of a Plone package
+### Creating a demo for your Plone package
 
 This buildpack allows you to easily create a demo of your Plone package for users to try the package out without the hassle of installing the package locally for themselves:
 
@@ -119,8 +119,10 @@ This buildpack allows you to easily create a demo of your Plone package for user
 2. Add your package's specific configuration to the ``heroku.cfg`` file.
 3. For a demo installation we want the DB to reset every once in a while, so visitors get a fresh install of Plone + your package, without content that other visitors created. This means, we want to go back to using ``Data.fs`` filestorage DB that will get removed every time the dyno running your demo is restarted. To go back to filestorage DB, just remove the ``rel-storage`` section from your ``heroku.cfg`` file.
 4. Instruct the buildpack to use the ``heroku.cfg`` instead of ``buildout.cfg``: ``$ heroku config:add BUILDOUT_CFG=heroku.cfg``
-5. Follow instructions in the `Usage` section of this README.
+5. Follow instructions in the `Usage` section of this README to deploy Plone, along with your package, to Heroku.
+6. Optionally, extend the ``heroku.cfg`` with support for [creating a pre-populated Plone site instance with buildout](https://pypi.python.org/pypi/collective.recipe.plonesite).
 
+If you get stuck, see how it's done in [collective.cover](https://github.com/collective/collective.cover/blob/master/heroku.cfg).
 
 Migrating an existing Plone site to Heroku
 ------------------------------------------
