@@ -122,7 +122,7 @@ This buildpack allows you to easily create a demo of your Plone package for user
 5. Follow instructions in the `Usage` section of this README to deploy Plone, along with your package, to Heroku.
 6. Optionally, extend the ``heroku.cfg`` with support for [creating a pre-populated Plone site instance with buildout](https://pypi.python.org/pypi/collective.recipe.plonesite).
 
-If you get stuck, see how it's done in [collective.cover](https://github.com/collective/collective.cover/blob/master/heroku.cfg).
+If you get stuck, see how it's done in [collective.cover](https://github.com/collective/collective.cover/blob/master/heroku.cfg) and [plone.app.mosaic](https://github.com/plone/plone.app.mosaic/blob/master/heroku.cfg).
 
 Migrating an existing Plone site to Heroku
 ------------------------------------------
