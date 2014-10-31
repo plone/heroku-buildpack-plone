@@ -184,7 +184,7 @@ Click ``Save Changes`` and reload.
 
 ### Sending emails
 
-The Heroku dyno does include ``sendmail``. Even if it did, it is not recommended to send emails from an unknown server/IP if you want them to be delivered. Instead, provision the [Mailgun add-on](https://addons.heroku.com/mailgun) that gives you a free SMTP server for outgoing email, along with tracking delivery/open rates:
+The Heroku dyno does not include ``sendmail``. Even if it did, it is not recommended to send emails from an unknown server/IP if you want them to be delivered. Instead, provision the [Mailgun add-on](https://addons.heroku.com/mailgun) that gives you a free SMTP server for outgoing email, along with tracking delivery/open rates:
 
     $ heroku addons:add mailgun
 
