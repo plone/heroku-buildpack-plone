@@ -1,3 +1,7 @@
+In a hurry? Just press this button and get your very own Plone on Heroku:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/plone/heroku-button-plone)
+
 Heroku buildpack: Plone
 =======================
 
