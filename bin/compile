@@ -96,7 +96,7 @@ cp -r $BUILD_DIR/parts $INSTALL_DIR
 cp -r $BUILD_DIR/var $INSTALL_DIR
 
 echo "-----> Copy configure_zopeconf.py script to slug"
-curl -OL "https://raw.githubusercontent.com/niteoweb/heroku-buildpack-plone/master/configure_zopeconf.py"
+curl -OL "https://raw.githubusercontent.com/plone/heroku-buildpack-plone/master/configure_zopeconf.py"
 cp -r $BUILD_DIR/configure_zopeconf.py $INSTALL_DIR
 
 echo "Done" | indent

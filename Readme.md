@@ -3,7 +3,7 @@ Heroku buildpack: Plone
 
 This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) for Plone apps, powered by [zc.buildout](http://www.buildout.org/en/latest/). You can use the free-tier [Heroku](https://www.heroku.com/features) account to run a simple, production-quality, Plone site, absolutely for free, forever.
 
-[![Build Status](https://travis-ci.org/niteoweb/heroku-buildpack-plone.svg?branch=master)](https://travis-ci.org/niteoweb/heroku-buildpack-plone)
+[![Build Status](https://travis-ci.org/plone/heroku-buildpack-plone.svg?branch=master)](https://travis-ci.org/plone/heroku-buildpack-plone)
 
 Plone on Heroku
 ---------------
@@ -32,7 +32,7 @@ To run Plone on Heroku, you need to add the following configuration to your
         user PG_USER
         password PG_PASS
 
-This repo includes a minimal [``buildout.cfg``](https://github.com/niteoweb/heroku-buildpack-plone/blob/master/buildout.cfg) sample file.
+This repo includes a minimal [``buildout.cfg``](https://github.com/plone/heroku-buildpack-plone/blob/master/buildout.cfg) sample file.
 
 To understand the configuration changes, you need to know the following things about Heroku:
 
@@ -61,7 +61,7 @@ This section shows an example prompt session. This example assumes that you alre
     $ git add buildout.cfg
     $ git commit -m "initial commit"
 
-    $ heroku create --buildpack git://github.com/niteoweb/heroku-buildpack-plone.git
+    $ heroku create --buildpack git://github.com/plone/heroku-buildpack-plone.git
 
     $ git push heroku master
     ...
