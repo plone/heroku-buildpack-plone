@@ -72,13 +72,21 @@ else
     echo "Use default bootstrap.py: ${BOOTSTRAP_PY_URL}" | indent
 fi
 
+echo "-----> Read SITE_PASSWORD from env vars, or use default"
+if [ -f $ENV_DIR/SITE_PASSWORD ]; then
+    export "SITE_PASSWORD=$(cat $ENV_DIR/SITE_PASSWORD)"
+    echo "Use custom bootstrap.py: ${SITE_PASSWORD}" | indent
+else
+    export "SITE_PASSWORD=admin"
+    echo "Use default admin password: ${SITE_PASSWORD}" | indent
+fi
+
 cd $BUILD_DIR
 echo "-----> Bootstrap buildout"
 curl -OL "${BOOTSTRAP_PY_URL}"
 python bootstrap.py -c $BUILDOUT_CFG
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
-echo "using password $SITE_PASSWORD" | indent
-export SITE_PASSWORD=$SITE_PASSWORD; bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
+bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
 
 echo "-----> Fix paths in zope.conf"
 sed "s|${BUILD_DIR}|/app|" parts/instance/etc/zope.conf > zope.conf.new
