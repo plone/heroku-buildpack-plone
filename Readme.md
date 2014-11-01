@@ -8,8 +8,9 @@ This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) fo
 Plone on Heroku
 ---------------
 
-To run Plone on Heroku, you need to add the following configuration to your
-``buildout.cfg`` file:
+To run Plone on Heroku, we recommend that you have a buildout file named heroku.cfg
+then add the following configuration to your
+``heroku.cfg`` file:
 
     [buildout]
     ...
@@ -32,7 +33,7 @@ To run Plone on Heroku, you need to add the following configuration to your
         user PG_USER
         password PG_PASS
 
-This repo includes a minimal [``buildout.cfg``](https://github.com/plone/heroku-buildpack-plone/blob/master/buildout.cfg) sample file.
+This repo includes a minimal [``heroku.cfg``](https://github.com/plone/heroku-buildpack-plone/blob/master/heroku.cfg) sample file.
 
 To understand the configuration changes, you need to know the following things about Heroku:
 
@@ -46,7 +47,7 @@ To understand the configuration changes, you need to know the following things a
 
 5. If you use a free-tier account, Heroku gives you one dyno instance per month. However, if your site has no traffic for longer than one hour, Heroku puts the dyno to sleep. If the dyno is asleep when the next request is made to your site, there will be some delay before a response is sent back (~20s for Heroku startup, ~20s for Plone startup). Subsequent requests will be served at a normal speed.
 
-6. The free-tier PostgreSQL DB included in this buildpack has a limit of 10k rows. To stay below this limit, the ``buildout.cfg`` sets the ``keep-history false`` flag to discard transactional history. This flag disables the `Undo` Plone feature, but allows you to retain document history, keeps your DB small and manageable, and eliminates the need to regularly "pack" your DB. Based on preliminary tests, the 10k limit is reached after creating about 200 content items. After that, you need to move to the first paid PostgreSQL plan ($9/month) that increases the limit to 10 million rows. To check how many rows your DB uses, run ``heroku pg:info``.
+6. The free-tier PostgreSQL DB included in this buildpack has a limit of 10k rows. To stay below this limit, the ``heroku.cfg`` sets the ``keep-history false`` flag to discard transactional history. This flag disables the `Undo` Plone feature, but allows you to retain document history, keeps your DB small and manageable, and eliminates the need to regularly "pack" your DB. Based on preliminary tests, the 10k limit is reached after creating about 200 content items. After that, you need to move to the first paid PostgreSQL plan ($9/month) that increases the limit to 10 million rows. To check how many rows your DB uses, run ``heroku pg:info``.
 
 
 Usage
@@ -55,10 +56,10 @@ Usage
 This section shows an example prompt session. This example assumes that you already [signed up for a Heroku account](https://id.heroku.com/signup) and successfully installed the [Heroku Toolbelt](https://toolbelt.heroku.com/):
 
     $ ls
-    buildout.cfg
+    heroku.cfg
 
     $ git init
-    $ git add buildout.cfg
+    $ git add heroku.cfg
     $ git commit -m "initial commit"
 
     $ heroku create --buildpack git://github.com/plone/heroku-buildpack-plone.git
@@ -83,7 +84,7 @@ This section shows an example prompt session. This example assumes that you alre
     $ heroku open
     $ heroku logs -t
 
-The buildpack will detect that your app is a Plone app if your repo has the file `buildout.cfg` in the root. Heroku will use `zc.buildout` to install your dependencies and "vendor" a copy of the Plone runtime into your slug. The buildpack will define a default ``Procfile`` so you don't have to manually create it. The buildpack will also provision a free-tier PostgreSQL DB for persistence.
+The buildpack will detect that your app is a Plone app if your repo has the file `heroku.cfg` in the root. Heroku will use `zc.buildout` to install your dependencies and "vendor" a copy of the Plone runtime into your slug. The buildpack will define a default ``Procfile`` so you don't have to manually create it. The buildpack will also provision a free-tier PostgreSQL DB for persistence.
 
 If you want general information about Heroku, you can read [how Heroku works](https://devcenter.heroku.com/articles/how-heroku-works).
 
@@ -115,12 +116,14 @@ If you want to use an arbitrary ``bootstrap.py`` file, for example to enable sup
 
 This buildpack allows you to easily create a demo of your Plone package for users to try the package out without the hassle of installing the package locally for themselves:
 
-1. Add ``heroku.cfg`` to your package's repo, based on the sample ``buildout.cfg`` provided in this repo.
+1. Add ``heroku.cfg`` to your package's repo, based on the sample ``heroku.cfg`` provided in this repo.
 2. Add your package's specific configuration to the ``heroku.cfg`` file.
 3. For a demo installation we want the DB to reset every once in a while, so visitors get a fresh install of Plone + your package, without content that other visitors created. This means, we want to go back to using ``Data.fs`` filestorage DB that will get removed every time the dyno running your demo is restarted. To go back to filestorage DB, just remove the ``rel-storage`` section from your ``heroku.cfg`` file.
-4. Instruct the buildpack to use the ``heroku.cfg`` instead of ``buildout.cfg``: ``$ heroku config:add BUILDOUT_CFG=heroku.cfg``
-5. Follow instructions in the `Usage` section of this README to deploy Plone, along with your package, to Heroku.
-6. Optionally, extend the ``heroku.cfg`` with support for [creating a pre-populated Plone site instance with buildout](https://pypi.python.org/pypi/collective.recipe.plonesite).
+4. Follow instructions in the `Usage` section of this README to deploy Plone, along with your package, to Heroku.
+5. Optionally, extend the ``heroku.cfg`` with support for [creating a pre-populated Plone site instance with buildout](https://pypi.python.org/pypi/collective.recipe.plonesite).
+
+If you prefer to use a name like the typical ``buildout.cfg`` instead of ``heroku.cfg`` you will need to tell heroku
+using this instruction: ``$ heroku config:add BUILDOUT_CFG=buildout.cfg``
 
 If you get stuck, see how it's done in [collective.cover](https://github.com/collective/collective.cover/blob/master/heroku.cfg) and [plone.app.mosaic](https://github.com/plone/plone.app.mosaic/blob/master/heroku.cfg).
 
