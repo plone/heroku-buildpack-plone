@@ -1,7 +1,3 @@
-In a hurry? Just press this button and get your very own Plone on Heroku:
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/niteoweb/heroku-button-plone)
-
 Heroku buildpack: Plone
 =======================
 
@@ -155,6 +151,14 @@ A sample ``zodbconvert.conf``:
           dsn dbname='<DATABASE>' user='<USER>' host='<HOST>' password='PASSWOR'
         </postgresql>
     </relstorage>
+
+
+Additional resources
+--------------------
+
+* Blog post introducing Plone support on Heroku: http://www.niteoweb.com/blog/dear-plone-welcome-to-2014
+* About Buildpacks: https://devcenter.heroku.com/articles/buildpacks
+* About custom Buildpacks: https://devcenter.heroku.com/articles/buildpack-api
 
 
 :sparkles: Bonus Karma Points :sparkles:
