@@ -12,6 +12,10 @@ CACHE_DIR=$2  # -> use this dir for caching between compiles
 ENV_DIR=$3  # -> environment variables are stored as files inside here
 INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
 # finished, copy results to this dir so they get compressed into a Heroku slug
+UI_URL=https://launchpad.net/plone/4.3/4.3.3/+download/Plone-4.3.3-UnifiedInstaller.tgz
+UI_TARBALL=Plone-4.3.3-UnifiedInstaller.tgz
+UI_DIR=Plone-4.3.3-UnifiedInstaller
+
 
 # make sure dirs exist
 mkdir -p $CACHE_DIR
@@ -25,7 +29,20 @@ if [ -d $CACHE_DIR/bin ]; then
     cp -r $CACHE_DIR/parts  $BUILD_DIR/
     cp -r $CACHE_DIR/var  $BUILD_DIR/
 else
-    echo "Cache empty, start from scratch" | indent
+    echo "Cache empty, let's fix that" | indent
+    echo "Prime with Unified Installer cache" | indent
+    curl -OL $UI_URL
+    echo "Unpacking Installer" | indent
+    tar xfz $UI_TARBALL
+    cd $UI_DIR
+    echo "Unpacking Installer cache" | indent
+    tar xfj packages/buildout-cache.tar.bz2
+    echo "Moving cache eggs to build directory" | indent
+    cp -r buildout-cache/eggs $BUILD_DIR/
+    echo "Clean up Installer files" | indent
+    cd ..
+    rm -rf $UI_TARBALL $UI_DIR
+
 fi
 
 echo "-----> Read BUILDOUT_CFG from env vars, or use default"
