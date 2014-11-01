@@ -90,7 +90,7 @@ Options
 
 This feature is mostly to provide a mechanism for the heroku button to assign a random password.
 Most users will not use this directly, however, if you want to change
-the default admin password, you an by setting the ADMIN_PASSWORD environment variable:
+the default admin password, you can by setting the ADMIN_PASSWORD environment variable:
 
     $ heroku config:add ADMIN_PASSWORD=yourSuper@secure%password
 
