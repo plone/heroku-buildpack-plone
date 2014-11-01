@@ -77,7 +77,7 @@ echo "-----> Bootstrap buildout"
 curl -OL "${BOOTSTRAP_PY_URL}"
 python bootstrap.py -c $BUILDOUT_CFG
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
-bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
+export SITE_PASSWORD=$SITE_PASSWORD bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
 
 echo "-----> Fix paths in zope.conf"
 sed "s|${BUILD_DIR}|/app|" parts/instance/etc/zope.conf > zope.conf.new
