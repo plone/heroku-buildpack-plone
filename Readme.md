@@ -8,19 +8,16 @@ This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) fo
 Plone on Heroku
 ---------------
 
-To run Plone on Heroku, we recommend that you have a buildout file named heroku.cfg
-then add the following configuration to your
-``heroku.cfg`` file:
+To run Plone on Heroku, you need to add the following ``heroku.cfg`` buildout configuration to your
+repository (assuming you already have a ``buildout.cfg`` in your repository:
 
     [buildout]
-    ...
+    extends = buildout.cfg
     relative-paths = true
 
     [instance]
-    ...
     relative-paths = true
     eggs +=
-        ...
         RelStorage
         psycopg2
     rel-storage =
@@ -32,8 +29,6 @@ then add the following configuration to your
         dbname PG_DBNAME
         user PG_USER
         password PG_PASS
-
-This repo includes a minimal [``heroku.cfg``](https://github.com/plone/heroku-buildpack-plone/blob/master/heroku.cfg) sample file.
 
 To understand the configuration changes, you need to know the following things about Heroku:
 
@@ -56,11 +51,10 @@ Usage
 This section shows an example prompt session. This example assumes that you already [signed up for a Heroku account](https://id.heroku.com/signup) and successfully installed the [Heroku Toolbelt](https://toolbelt.heroku.com/):
 
     $ ls
-    heroku.cfg
+    buildout.cfg heroku.cfg
 
-    $ git init
     $ git add heroku.cfg
-    $ git commit -m "initial commit"
+    $ git commit -m "add support for deploying on Heroku"
 
     $ heroku create --buildpack git://github.com/plone/heroku-buildpack-plone.git
 
@@ -84,7 +78,7 @@ This section shows an example prompt session. This example assumes that you alre
     $ heroku open
     $ heroku logs -t
 
-The buildpack will detect that your app is a Plone app if your repo has the file `heroku.cfg` in the root. Heroku will use `zc.buildout` to install your dependencies and "vendor" a copy of the Plone runtime into your slug. The buildpack will define a default ``Procfile`` so you don't have to manually create it. The buildpack will also provision a free-tier PostgreSQL DB for persistence.
+The buildpack will detect that your app is a Plone app if your repo has the file `buildout.cfg` in the root. Heroku will use `zc.buildout` to install your dependencies and "vendor" a copy of the Plone runtime into your slug. The buildpack will define a default ``Procfile`` so you don't have to manually create it. The buildpack will also provision a free-tier PostgreSQL DB for persistence.
 
 If you want general information about Heroku, you can read [how Heroku works](https://devcenter.heroku.com/articles/how-heroku-works).
 
@@ -94,9 +88,9 @@ Options
 
 ### Running an arbitrary *.cfg file
 
-To run an arbitrary *.cfg file such as ``heroku.cfg``, set the following environment variable:
+To run an arbitrary *.cfg file such as ``production.cfg`` instead of the default ``heroku.cfg``, set the following environment variable:
 
-    $ heroku config:add BUILDOUT_CFG=heroku.cfg
+    $ heroku config:add BUILDOUT_CFG=production.cfg
 
 ### Increase buildout verbosity
 
@@ -122,9 +116,6 @@ This buildpack allows you to easily create a demo of your Plone package for user
 4. Follow instructions in the `Usage` section of this README to deploy Plone, along with your package, to Heroku.
 5. Optionally, extend the ``heroku.cfg`` with support for [creating a pre-populated Plone site instance with buildout](https://pypi.python.org/pypi/collective.recipe.plonesite).
 
-If you prefer to use a name like the typical ``buildout.cfg`` instead of ``heroku.cfg`` you will need to tell heroku
-using this instruction: ``$ heroku config:add BUILDOUT_CFG=buildout.cfg``
-
 If you get stuck, see how it's done in [collective.cover](https://github.com/collective/collective.cover/blob/master/heroku.cfg) and [plone.app.mosaic](https://github.com/plone/plone.app.mosaic/blob/master/heroku.cfg).
 
 Migrating an existing Plone site to Heroku
@@ -133,7 +124,7 @@ Migrating an existing Plone site to Heroku
 When moving to Heroku, the main task is to migrate from a ZODB filesystem DB to a PostgreSQL relational DB. Migrations might differ, but generally you follow these steps:
 
 1. Download ``Data.fs`` & BLOBs to your local machine.
-2. Add the Heroku-specific configuration to the local ``buildout.cfg`` file.
+2. Add the Heroku-specific configuration to the local ``heroku.cfg`` file.
 3. Run ``git push heroku master`` to deploy your code to Heroku and create a PostgreSQL DB.
 4. Run ``heroku config`` and write down the ``DATABASE_URL`` DB connection string.
 5. Follow the instructions on https://pypi.python.org/pypi/RelStorage#id18 to complete the migration.
