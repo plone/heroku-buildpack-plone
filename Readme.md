@@ -32,7 +32,7 @@ repository (assuming you already have a ``buildout.cfg`` in your repository:
 
 To understand the configuration changes, you need to know the following things about Heroku:
 
-1. Heroku calls a single server instance a [dyno](https://devcenter.heroku.com/articles/dynos).
+1. Heroku refers to a single server instance as a [dyno](https://devcenter.heroku.com/articles/dynos).
 
 2. Heroku uses a two-step deployment workflow. In Plone's case, this buildpack first compiles a "runtime slug" with ``bin/buildout``. Then, Heroku copies the slug to a dyno and runs your app code against this slug with ``bin/instance console``. Because ``bin/buildout`` runs in a different place from ``bin/instance``, we need to fix some of the paths that buildout generates. The ``relative-paths`` flag fixes most of the paths for us, and then the buildpack uses ``sed`` to fix the rest of the paths in the buildout-generated ``zope.conf`` file.
 
