@@ -4,6 +4,8 @@ Changelog
 0.2 (2014-11-01)
 ----------------
 
+- Added support for ADMIN_PASSWORD env var. [pigeonflight]
+
 - [MIGRATION REQUIRED] Move the package to the Plone Foundation organization
   on GitHub. These requires updates to:
   * URLs in heroku-button-plone apps

@@ -86,6 +86,15 @@ If you want general information about Heroku, you can read [how Heroku works](ht
 Options
 -------
 
+### Changing the default admin password
+
+This feature is mostly to provide a mechanism for the heroku button to assign a random password.
+Most users will not use this directly, however, if you want to change
+the default admin password, you can by setting the ADMIN_PASSWORD environment variable:
+
+    $ heroku config:add ADMIN_PASSWORD=yourSuper@secure%password
+
+
 ### Running an arbitrary *.cfg file
 
 To run an arbitrary *.cfg file such as ``production.cfg`` instead of the default ``heroku.cfg``, set the following environment variable:
