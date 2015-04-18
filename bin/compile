@@ -68,13 +68,13 @@ if [ -f $ENV_DIR/BOOTSTRAP_PY_URL ]; then
     export "BOOTSTRAP_PY_URL=$(cat $ENV_DIR/BOOTSTRAP_PY_URL)"
     echo "Use custom bootstrap.py: ${BOOTSTRAP_PY_URL}" | indent
 else
-    export "BOOTSTRAP_PY_URL=http://downloads.buildout.org/1/bootstrap.py"
+    export "BOOTSTRAP_PY_URL=http://downloads.buildout.org/2/bootstrap.py"
     echo "Use default bootstrap.py: ${BOOTSTRAP_PY_URL}" | indent
 fi
 
 cd $BUILD_DIR
 echo "-----> Bootstrap buildout"
-curl -OL "${BOOTSTRAP_PY_URL}"
+curl -o bootstrap.py L "${BOOTSTRAP_PY_URL}"
 python bootstrap.py -c $BUILDOUT_CFG
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
