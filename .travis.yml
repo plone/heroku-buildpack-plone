@@ -1,3 +1,4 @@
+sudo: false
 env:
   global:
   - secure: |-
