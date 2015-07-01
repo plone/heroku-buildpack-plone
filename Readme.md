@@ -56,7 +56,7 @@ This section shows an example prompt session. This example assumes that you alre
     $ git add heroku.cfg
     $ git commit -m "add support for deploying on Heroku"
 
-    $ heroku create --buildpack git://github.com/plone/heroku-buildpack-plone.git
+    $ heroku create --buildpack https://github.com/plone/heroku-buildpack-plone.git
 
     $ git push heroku master
     ...
