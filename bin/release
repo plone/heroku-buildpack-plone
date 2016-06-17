@@ -4,7 +4,7 @@
 cat << EOF
 ---
 addons:
-  - heroku-postgresql:dev
+  - heroku-postgresql:hobby-dev
 default_process_types:
   web: python configure_zopeconf.py; bin/instance console
 EOF
