@@ -20,8 +20,9 @@ UI_DIR=Plone-5.0.6-UnifiedInstaller
 mkdir -p $CACHE_DIR
 mkdir -p $INSTALL_DIR
 
-echo "-----> Install libffi"
-/app/.heroku/python/bin/pip install cffi
+# libffi support.
+BIN_DIR=$(cd $(dirname $0); pwd) # absolute path
+source $BIN_DIR/steps/libffi
 
 echo "-----> Use build cache"
 if [ -d $CACHE_DIR/bin ]; then
