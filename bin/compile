@@ -15,19 +15,13 @@ INSTALL_DIR="$BUILD_DIR/.heroku/vendor/buildout"  # -> after buildout is
 UI_URL=https://launchpad.net/plone/5.0/5.0.6/+download/Plone-5.0.6-UnifiedInstaller.tgz
 UI_TARBALL=Plone-5.0.6-UnifiedInstaller.tgz
 UI_DIR=Plone-5.0.6-UnifiedInstaller
-APT_CACHE_DIR="$CACHE_DIR/apt/cache"
-APT_STATE_DIR="$CACHE_DIR/apt/state"
 
 # make sure dirs exist
 mkdir -p $CACHE_DIR
 mkdir -p $INSTALL_DIR
 
-echo "-----> Install libffi-dev"
-mkdir -p "$APT_CACHE_DIR/archives/partial"
-mkdir -p "$APT_STATE_DIR/lists/partial"
-APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
-apt-get $APT_OPTIONS update
-apt-get $APT_OPTIONS install libffi-dev
+echo "-----> Install libffi"
+/app/.heroku/python/bin/pip install cffi
 
 echo "-----> Use build cache"
 if [ -d $CACHE_DIR/bin ]; then
