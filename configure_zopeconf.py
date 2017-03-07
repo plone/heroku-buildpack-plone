@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 """Since Plone cannot read env vars or command line parameters we have to
-go through the zope.conf and searc/replace values. Bad Plone!"""
+go through the zope.conf file and search/replace values. Bad Plone!"""
 import os
 
 DIR = '/app/'
@@ -18,5 +18,7 @@ with open(zope_conf_new, 'wt') as fout:
                 replace('PG_USER', os.environ['DATABASE_URL'].split('//')[1].split(':')[0]).
                 replace('PG_PASS', os.environ['DATABASE_URL'].split('//')[1].split(':')[1].split('@')[0])
             )
+        if os.environ.get('HTTPS'):
+            fout.write('\n<cgi-environment>\n\tHTTPS ON\n</cgi-environment>')
 
 os.system('mv {} {}'.format(zope_conf_new, zope_conf_orig))
