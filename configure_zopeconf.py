@@ -18,5 +18,7 @@ with open(zope_conf_new, 'wt') as fout:
                 replace('PG_USER', os.environ['DATABASE_URL'].split('//')[1].split(':')[0]).
                 replace('PG_PASS', os.environ['DATABASE_URL'].split('//')[1].split(':')[1].split('@')[0])
             )
+        if os.environ.get('HTTPS'):
+            fout.write('<cgi-environment>HTTPS ON</cgi-environment>')   
 
 os.system('mv {} {}'.format(zope_conf_new, zope_conf_orig))
