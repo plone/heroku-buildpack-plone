@@ -2,6 +2,6 @@
 # bin/detect <build-dir>
 
 BUILD_DIR=$1
-[ -f $BUILD_DIR/buildout.cfg ] || exit 1 # fail fast if no buildout.cfg
+[ -f $BUILD_DIR/heroku.cfg ] || exit 1 # fail fast if no buildout.cfg
 
 echo Plone
