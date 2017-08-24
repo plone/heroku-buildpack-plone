@@ -104,7 +104,7 @@ You can increase verbosity up to ``-vvvv``.
 
 If you want to use an arbitrary ``bootstrap.py`` file, for example to enable support for ``zc.buildout`` 2.x, set the following environment variable:
 
-    $ heroku config:add BOOTSTRAP_PY_URL=http://downloads.buildout.org/2/bootstrap.py
+    $ heroku config:add BOOTSTRAP_PY_URL=https://bootstrap.pypa.io/bootstrap-buildout.py
 
 ### Creating a demo for your Plone package
 
