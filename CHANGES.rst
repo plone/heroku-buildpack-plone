@@ -4,6 +4,7 @@ Changelog
 0.2 (2014-11-01)
 ----------------
 
+- Update the download link for the bootstrap.py file.
 - [MIGRATION REQUIRED] Move the package to the Plone Foundation organization
   on GitHub. These requires updates to:
   * URLs in heroku-button-plone apps
