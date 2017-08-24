@@ -75,7 +75,7 @@ fi
 cd $BUILD_DIR
 echo "-----> Bootstrap buildout"
 wget -O bootstrap.py "${BOOTSTRAP_PY_URL}"
-python bootstrap.py -c $BUILDOUT_CFG
+python bootstrap.py -c $BUILDOUT_CFG --setuptools-version 26.1.1
 echo "-----> Run bin/buildout -c ${BUILDOUT_CFG} ${BUILDOUT_VERBOSITY}"
 bin/buildout -c $BUILDOUT_CFG $BUILDOUT_VERBOSITY
 
